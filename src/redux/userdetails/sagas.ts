@@ -6,10 +6,8 @@ import { fetchRestApi } from "./fetchRestApi";
 function* fetchDetails(action: FetchDetailsAction) {
     let response;
     try {
-        // response = yield call(fetchRestApi); 
-        //Easy switch to rest api call need to update the UserDetails model accordingly
-        
-        response = UserDetailsSample;
+        response = yield call(fetchRestApi); 
+        // response = UserDetailsSample;
         console.log(response);
     
   } catch (error) {
@@ -28,7 +26,6 @@ function* updateDetails(action: UpdateDetailsAction) {
     try {
         
         response = userDetails;
-        // UserDetailsSample;
         console.log(response);
     
   } catch (error) {
