@@ -10,17 +10,18 @@ import {
     TableCell,
     TableBody,
     makeStyles,
-    Container
+    Container,
+    Button,
+    Typography,
+    Tooltip
   } from "@material-ui/core";
 
 import EditIcon from "@material-ui/icons";
-import { connect } from "react-redux";
-import { fetchDetails, updateDetails } from "../redux/userdetails/actions";
-import { userDetailsSelector, updatedSelector, updatedDetailsSelector } from "../redux/userdetails/selector";
+import { fetchDetails, updateDetails, fetchAwsDetails } from "../redux/userdetails/actions";
+import { userDetailsSelector, updatedSelector, updatedDetailsSelector, awsDetailsSelector } from "../redux/userdetails/selector";
 import ReactDataGrid  from "react-data-grid";
 import { UserDetails } from "../redux/userdetails/types";
 import MaterialTable from "material-table";
-import { grey } from "@material-ui/core/colors";
 
 export const TableComponent = (): ReactElement => {
 
@@ -28,31 +29,9 @@ export const TableComponent = (): ReactElement => {
         root: {
           textAlign: "center"
         },
-        overlay: {
-          width: "100%",
-          height: "100%",
-          zIndex: 20,
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        },
-        body: {
-          "&:nth-child(even)": {
-            backgroundColor: grey[200]
-          }
-        },
         headerRow: {
           "& > th": {
             paddingLeft: "2rem"
-          }
-        },
-        bodyRow: {
-          "& > td": {
-            "&:first-child": {
-              width: "7rem"
-            },
-            padding: "0 2rem"
           }
         },
         tableBody: {
@@ -62,24 +41,7 @@ export const TableComponent = (): ReactElement => {
         tableCell: {
           width: "1px",
           padding: "20px"
-        },
-        centeredIcon: {
-          textAlign: "center"
-        },
-        tooltipedUnderline: {
-          textDecoration: "underline",
-          textUnderlinePosition: "under",
-          textDecorationStyle: "dashed",
-          cursor: "pointer"
-        },
-        bodySecondaryRow: {
-          "& > td": {
-            padding: "0 2rem"
-          }
-        },
-        accordion: {
-          margin: "16px 0"
-        }
+        },       
       });
       
     const dispatch = useDispatch();
@@ -97,7 +59,6 @@ export const TableComponent = (): ReactElement => {
 
      const updateUserDetails = (newList: UserDetails[]) => {
         dispatch(updateDetails(newList));
-        // dispatch(fetchDetails());
         // setData(newList);        
      }
 
@@ -128,7 +89,16 @@ export const TableComponent = (): ReactElement => {
          updateUserDetails(newUpdatedList);
      }
 
+     const [buttonPressed, setButtonPressed] = React.useState(false);
      
+     const handleButton = (): void => {
+        dispatch(fetchAwsDetails());
+        setButtonPressed(true);
+     }
+
+     const awsDetails = useSelector(awsDetailsSelector);
+     console.log(awsDetails);
+
     return (
         <>
         <Container className={classes.root} maxWidth="xl" disableGutters>
@@ -185,25 +155,41 @@ export const TableComponent = (): ReactElement => {
                           />
                 </TableCell>
                 <TableCell align="right">
-                <TextField
-                            id="email"
-                            name="email"
-                            variant="standard"
-                            type="required"
-                            defaultValue={
-                              row.email
-                            }
-                            multiline
-                            fullWidth
-                            onChange={(e) => handleChange(e,row.ID, 'email')}                            
-                          />
+                    <TextField
+                        id="email"
+                        name="email"
+                        variant="standard"
+                        type="required"
+                        defaultValue={
+                           row.email
+                        }
+                        multiline
+                        fullWidth
+                        onChange={(e) => handleChange(e,row.ID, 'email')}                            
+                    />
                 </TableCell>
               </TableRow>
             ))}
             </TableBody>
         </Table>
         </TableContainer>
-        </Container>
+            <Button onClick={handleButton} variant="contained" color="primary">
+                <Tooltip title="Click to Fetch the region from AWS">
+                    <Typography variant="inherit">Fetch AWS</Typography>
+                </Tooltip>
+            </Button>
+            {buttonPressed &&
+                <TextField
+                    id="email"
+                    name="email"
+                    variant="filled"
+                    type="required"
+                    defaultValue={awsDetails.region + ' ' + awsDetails.version}                    
+                    multiline
+                    fullWidth
+                />
+            }
+        </Container>    
         </>
         
     )
