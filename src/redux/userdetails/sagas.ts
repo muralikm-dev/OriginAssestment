@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "@redux-saga/core/effects";
 import { FetchDetailsAction, FETCH_DETAILS, UpdateDetailsAction, UPDATE_DETAILS, FETCH_DETAILS_FAILURE, FETCH_DETAILS_SUCCESS, UPDATE_DETAILS_FAILURE, UPDATE_DETAILS_SUCCESS, FetchAWSDetailAction, FETCH_AWS_REGION_FAILURE, FETCH_AWS_REGION_SUCCESS, FETCH_AWS_REGION } from './types';
 import { UserDetailsSample } from "../UserDetailsSample";
-import { fetchRestApi } from "./fetchRestApi";
+import { fetchRestApi, fetchRestAwsApi } from "./fetchRestApi";
 
 function* fetchDetails(action: FetchDetailsAction) {
     let response;
@@ -24,7 +24,7 @@ export function* watchFetchDetails() {
 function* fetchAwsDetails(action: FetchAWSDetailAction) {
     let response;
     try {
-        response = { region: "aws-region2", version: "Nodejs V12x"} 
+        response = yield call(fetchRestAwsApi); 
         console.log(response);
     
   } catch (error) {
@@ -60,4 +60,3 @@ export const userSagas = [
     watchUpdateDetails,
     watchFetchAwsDetails
 ];
-  
