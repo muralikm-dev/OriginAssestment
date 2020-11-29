@@ -184,7 +184,7 @@ export const TableComponent = (): ReactElement => {
                     name="email"
                     variant="filled"
                     type="required"
-                    defaultValue={awsDetails.region + ' ' + awsDetails.version}                    
+                    value={awsDetails.region + ' ' +awsDetails.version}                    
                     multiline
                     fullWidth
                 />
@@ -195,5 +195,3 @@ export const TableComponent = (): ReactElement => {
     )
   
 }
-
-  
