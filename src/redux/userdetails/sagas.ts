@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "@redux-saga/core/effects";
-import { FetchDetailsAction, FETCH_DETAILS, UpdateDetailsAction, UPDATE_DETAILS, FETCH_DETAILS_FAILURE, FETCH_DETAILS_SUCCESS, UPDATE_DETAILS_FAILURE, UPDATE_DETAILS_SUCCESS } from './types';
+import { FetchDetailsAction, FETCH_DETAILS, UpdateDetailsAction, UPDATE_DETAILS, FETCH_DETAILS_FAILURE, FETCH_DETAILS_SUCCESS, UPDATE_DETAILS_FAILURE, UPDATE_DETAILS_SUCCESS, FetchAWSDetailAction, FETCH_AWS_REGION_FAILURE, FETCH_AWS_REGION_SUCCESS, FETCH_AWS_REGION } from './types';
 import { UserDetailsSample } from "../UserDetailsSample";
 import { fetchRestApi } from "./fetchRestApi";
 
@@ -7,6 +7,7 @@ function* fetchDetails(action: FetchDetailsAction) {
     let response;
     try {
         response = yield call(fetchRestApi); 
+           
         // response = UserDetailsSample;
         console.log(response);
     
@@ -18,6 +19,22 @@ function* fetchDetails(action: FetchDetailsAction) {
 
 export function* watchFetchDetails() {
     yield takeLatest(FETCH_DETAILS, fetchDetails);
+}
+
+function* fetchAwsDetails(action: FetchAWSDetailAction) {
+    let response;
+    try {
+        response = { region: "aws-region2", version: "Nodejs V12x"} 
+        console.log(response);
+    
+  } catch (error) {
+    yield put({ type: FETCH_AWS_REGION_FAILURE, payload: error });
+  }
+  yield put({ type: FETCH_AWS_REGION_SUCCESS, payload: response });
+}
+
+export function* watchFetchAwsDetails() {
+    yield takeLatest(FETCH_AWS_REGION, fetchAwsDetails);
 }
 
 function* updateDetails(action: UpdateDetailsAction) {
@@ -40,6 +57,7 @@ export function* watchUpdateDetails() {
 
 export const userSagas = [
     watchFetchDetails,
-    watchUpdateDetails
+    watchUpdateDetails,
+    watchFetchAwsDetails
 ];
   
