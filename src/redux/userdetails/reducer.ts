@@ -26,7 +26,7 @@ export const userDetailsReducer = (state: UserDetailsState = initialState, actio
         case FETCH_DETAILS_FAILURE:
             return { ...state, loading: false, updated: false };
         case UPDATE_DETAILS: 
-            return {...state, loading: true, updated: false};
+            return {...state, loading: false, updated: true};
         case UPDATE_DETAILS_SUCCESS:
             const updatedData = action.payload;
             console.log(updatedData);
